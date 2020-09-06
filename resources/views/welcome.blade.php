@@ -15,18 +15,15 @@
         <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
             <h5 class="my-0 mr-md-auto font-weight-normal">Renta Carro S.A</h5>
             <nav class="my-2 my-md-0 mr-md-3">
-                <a class="p-2 text-dark" href="#">Features</a>
-                <a class="p-2 text-dark" href="#">Enterprise</a>
-                <a class="p-2 text-dark" href="#">Support</a>
-                <a class="p-2 text-dark" href="#">Pricing</a>
+                <a class="p-2 text-dark" href="#">Carros</a>
                 @if (Route::has('login'))
                     @auth
-                        <a href="{{ url('/home') }}">Home</a>
+                        <a href="{{ url('/home') }}">Inicio</a>
                     @else
-                        <a href="{{ route('login') }}">Login</a>
+                        <a href="{{ route('login') }}">Inicio Sesión</a>
 
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
+                            <a href="{{ route('register') }}">Registrate</a>
                         @endif
                     @endauth
                 @endif
@@ -40,23 +37,22 @@
 
         <div class="container">
             <div class="card-deck mb-3 text-center">
-                @for ($i = 0; $i < sizeof($cars); $i++)
+                @foreach ( $cars as $car)
                     <div class="card mb-4 shadow-sm">
                         <div class="card-header">
-                        <h4 class="my-0 font-weight-normal">Carro # {{ $i +1 }}</h4>
+                        <h4 class="my-0 font-weight-normal">Carro # {{ $car->id }}</h4>
                         </div>
                         <div class="card-body">
-                        <h1 class="card-title pricing-card-title">${{ $cars[$i]['price'] }} <small class="text-muted">/ mo</small></h1>
+                        <h1 class="card-title pricing-card-title">${{ number_format( $car->price, 0, ',', '.') }} <small class="text-muted">/ día</small></h1>
                         <ul class="list-unstyled mt-3 mb-4">
-                            <li>Modelo {{ $cars[$i]['model'] }}</li>
-                            <li>Color {{ $cars[$i]['color'] }}</li>
-                            <li>Confortable</li>
-                            <li>Ecónomico</li>
+                            <li>Modelo {{ $car->model }}</li>
+                            <li>Color {{ $car->color }}</li>
+                            <li>Comfortable</li>
                         </ul>
                         <a href="/rent" class="btn btn-block btn-primary">Alquilame Aqui</a>
                         </div>
                     </div>
-                @endfor
+                @endforeach
                 <footer class="pt-4 my-md-5 pt-md-5 border-top">
                     <div class="row">
                         <div class="col-12 col-md">

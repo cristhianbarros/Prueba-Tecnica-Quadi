@@ -14,8 +14,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect()->route('cars.index');
+    return redirect()->route('welcome.index');
 });
+
+
+Route::resource('welcome', 'WelcomeController')->only(['index']);
+
 
 Route::get('/rent', function () {
     return view('rent.form');
@@ -27,3 +31,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('cars', 'CarController');
 Route::resource('cars.rents', 'CarRentController');
+
+
