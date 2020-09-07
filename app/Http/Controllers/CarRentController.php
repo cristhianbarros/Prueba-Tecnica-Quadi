@@ -27,7 +27,7 @@ class CarRentController extends Controller
      */
     public function create(Car $car)
     {
-        return view('rent.form');
+        return view('rent.form', [ 'car' => $car ]);
     }
 
     /**
@@ -39,7 +39,52 @@ class CarRentController extends Controller
      */
     public function store(Request $request, Car $car)
     {
-        //
+        $data = $request->validate([
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
+            'name' => 'required',
+            'email' => 'required|email',
+            'document' => 'required|numeric'
+        ], [
+           'start_date.required' => 'El campo Fecha Salida es requerido.',
+           'start_date.date' => 'El campo Fecha Salida no es una fecha válida.',
+           'end_date.required' => 'El campo Fecha Regreso es requerido.',
+           'end_date.date' => 'El campo Fecha Salida no es una fecha válida.',
+           'end_date.after' => 'El campo Fecha Regreso debe ser una fecha después de Fecha Salida.',
+           'name.required' => 'El campo Nombres es requerido.',
+           'email.required' => 'El campo Email es requerido.',
+           'document.required' => 'El campo Documento es requerido.',
+        ]);
+
+        $data['payment'] = $request->input('payment');
+        $data['car_id'] = $car->id;
+
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+
+        $rents = $car->rents;
+
+        $errorMessage = "Lo sentimos, pero hay cohortes que coinciden con estas fechas ( $start_date a $end_date ), por favor verifica que no existan traslapos.";
+
+        foreach ($rents as $rent) {
+            if( ($start_date >= $rent->start_date && $start_date <= $rent->end_date) || ($end_date >= $rent->start_date && $end_date <= $rent->end_date)) {
+                session()->flash('warning-message', $errorMessage);
+                return redirect()->route('cars.rents.create', $car->id);
+            }
+        }
+
+        $rentsStarDateCoincidence = Rent::where('car_id', '=', $car->id)->whereBetween('start_date', [ $start_date, $end_date])->get()->count();
+        $rentsEndDateCoincidence = Rent::where('car:id', '=', $car->id)->whereBetween('end_date', [ $start_date, $end_date])->get()->count();
+
+        if($rentsStarDateCoincidence || $rentsEndDateCoincidence) {
+            session()->flash('warning-message', $errorMessage);
+            return redirect()->route('cars.rents.create', $car->id);
+        }
+
+        Rent::create($data);
+
+        session()->flash('status-rent', 'Los datos han sido guardados exitosamente!');
+        return redirect()->route('cars.rents.create', $car->id);
     }
 
     /**

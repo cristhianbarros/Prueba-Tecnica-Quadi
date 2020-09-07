@@ -49,7 +49,7 @@
                             <li>Color {{ $car->color }}</li>
                             <li>Comfortable</li>
                         </ul>
-                        <a href="/rent" class="btn btn-block btn-primary">Alquilame Aqui</a>
+                        <a href="{{ route('cars.rents.create', $car->id) }}" class="btn btn-block btn-primary">Alquilame Aqui</a>
                         </div>
                     </div>
                 @endforeach
