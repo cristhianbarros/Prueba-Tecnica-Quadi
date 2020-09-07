@@ -56,8 +56,7 @@
                     <p class="lead">Lo sentimos, en estos momentos no hay carros en la base de datos.</p>
                 </div>
                 @endforelse
-            </div>
-            <a href="{{ route('all-cars') }}" class="btn btn-block btn-primary">Ver Todos</a>
+        </div>
         <footer class="pt-4 my-md-5 pt-md-5 border-top">
             <div class="row">
                 <div class="col-12 col-md">

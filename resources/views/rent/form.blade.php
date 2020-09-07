@@ -38,7 +38,7 @@
     </div>
     @if (session('status-rent'))
         <div class="alert alert-success" role="alert">
-            {{ session('status-rent') }}
+            {{ session('status-rent') }} <a href="/">Volver al Inicio.</a>
         </div>
     @endif
     @if (session('warning-message'))
